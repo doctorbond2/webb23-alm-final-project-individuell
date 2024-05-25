@@ -1,0 +1,13 @@
+services:
+  webapp:
+    image: grupp_1_django_image
+    ports:
+      - '8081:8000'
+  db:
+    image: postgres:alpine3.20
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: django_db
+    ports:
+      - '5433:5432'

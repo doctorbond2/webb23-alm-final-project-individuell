@@ -1,0 +1,32 @@
+name: main CI
+
+on:
+  pull_request:
+    branches: ['main']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+    services:
+      db:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: django_db
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python
+        run: |
+          pipx install poetry --python python3.10
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+      - name: Run Tests
+        run: |
+          python blog_project/manage.py migrate
+          python blog_project/manage.py test
