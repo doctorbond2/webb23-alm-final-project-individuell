@@ -1,8 +1,4 @@
 services:
-  webapp:
-    image: grupp_1_django_image
-    ports:
-      - '8081:8000'
   db:
     image: postgres:alpine3.20
     environment:
@@ -11,3 +7,18 @@ services:
       POSTGRES_DB: django_db
     ports:
       - '5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  webapp:
+    depends_on:
+      - db
+    image: grupp_1_micke_django_image
+    ports:
+      - '8000:8000'
+    command: python blog_project/manage.py runserver 0.0.0.0:8000
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/django_db
+
+volumes:
+  postgres_data:
